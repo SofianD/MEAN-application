@@ -1,0 +1,20 @@
+<div *ngIf="posts.length">
+  <hr>
+  <h2>Post List Component</h2>
+  <mat-accordion multi="true">
+    <mat-expansion-panel *ngFor="let post of posts"
+    (opened)="post.panelOpenState = 'open'"
+    (closed)="post.panelOpenState = 'close'">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ post.title }}
+        </mat-panel-title>
+        <mat-panel-description>
+          Currently I am {{ post.panelOpenState }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>{{ post.content }}</p>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<p class="info-text mat-body-1" *ngIf="!posts.length">No post added yet.</p>

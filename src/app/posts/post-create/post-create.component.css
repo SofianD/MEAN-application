@@ -1,0 +1,9 @@
+mat-form-field,
+textarea {
+  width: 100%;
+}
+
+.new-post-title {
+  font-size: larger;
+  text-align: center;
+}

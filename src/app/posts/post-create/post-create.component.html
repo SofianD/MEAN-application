@@ -1,0 +1,16 @@
+
+<mat-card>
+  <h2 class="new-post-title mat-body-1">Create Post</h2>
+  <mat-form-field>
+    <input type="text" [(ngModel)]="enteredTitle" matInput placeholder="Title">
+  </mat-form-field>
+  <mat-form-field>
+    <textarea matInput rows="6" [(ngModel)]="enteredContent" placeholder="Content"></textarea>
+  </mat-form-field>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onAddPost()">Save Post
+  </button>
+</mat-card>
+
