@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { PostModel } from '../post-model';
+
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
@@ -17,7 +19,7 @@ export class PostListComponent implements OnInit {
   //   {title: 'Fifth post', content: 'This is the Fifth comment.', panelOpenState: 'close'}
   // ];
 
-  @Input() posts = [];
+  @Input() posts: PostModel[];
 
 
   constructor() { }
