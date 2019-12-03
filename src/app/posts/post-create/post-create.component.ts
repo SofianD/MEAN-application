@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { PostModel } from '../post-model';
@@ -15,8 +15,6 @@ export class PostCreateComponent {
   enteredTitle: string;
   enteredContent: string;
 
-  @Output() postCreated = new EventEmitter<PostModel>();
-
   onAddPost(form: NgForm) {
     if (form.invalid) {
       return console.log('Formulaire invalide');
@@ -25,6 +23,6 @@ export class PostCreateComponent {
       title: form.value.title,
       content: form.value.content
     };
-    this.postCreated.emit(post);
+
   }
 }
