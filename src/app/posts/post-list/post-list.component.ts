@@ -20,7 +20,7 @@ export class PostListComponent implements OnInit {
   //   {title: 'Fifth post', content: 'This is the Fifth comment.', panelOpenState: 'close'}
   // ];
 
-  @Input() posts: PostModel[];
+  @Input() posts: PostModel[] = [];
 
 
   constructor(public postService: PostService) {}
