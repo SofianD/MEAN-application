@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { PostModel } from '../post-model';
+import { PostService } from '../post.service';
 
 
 @Component({
@@ -19,10 +19,9 @@ export class PostCreateComponent {
     if (form.invalid) {
       return console.log('Formulaire invalide');
     }
-    const post: PostModel = {
-      title: form.value.title,
-      content: form.value.content
-    };
-
+    this.postService.addPost(form.value.title, form.value.content);
+    console.log('Post added');
   }
+
+  constructor(public postService: PostService) {}
 }
