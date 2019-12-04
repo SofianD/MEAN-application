@@ -21,7 +21,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   //   {title: 'Fifth post', content: 'This is the Fifth comment.', panelOpenState: 'close'}
   // ];
 
-  private posts: PostModel[] = [];
+  posts: PostModel[] = [];
   private postsSub: Subscription;
 
   constructor(public postService: PostService) {}
