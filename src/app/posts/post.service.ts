@@ -14,7 +14,7 @@ export class PostService {
   private posts: PostModel[] = [];
   private postsUpdated = new Subject<PostModel[]>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getPosts() {
     this.http.get<{message: string, posts: PostModel[]}>('http://localhost:3000/api/posts')
