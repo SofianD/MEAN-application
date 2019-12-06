@@ -20,7 +20,7 @@ export class PostCreateComponent {
       return console.log('Formulaire invalide');
     }
     this.postService.addPost(form.value.title, form.value.content);
-    console.log('Post added');
+    form.resetForm();
   }
 
   constructor(public postService: PostService) {}
