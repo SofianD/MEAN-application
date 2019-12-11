@@ -24,6 +24,8 @@
     "@angular/router": "~8.2.14",
     "body-parser": "^1.19.0",
     "hammerjs": "^2.0.8",
+    "mongodb": "^3.3.5",
+    "mongoose": "^5.7.14",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
