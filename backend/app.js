@@ -53,9 +53,13 @@ app.get("/api/posts", (req, res, next) => {
     res.status(200).json({
       message: 'Posts fetched succesfully',
       posts: documents
-    })
+    });
   });
 
+});
+
+app.delete('/api/posts/:id', (req, res, next) => {
+  console.log(req.params.id);
 });
 
 module.exports = app;
