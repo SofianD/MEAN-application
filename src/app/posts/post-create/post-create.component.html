@@ -1,13 +1,13 @@
 
 <mat-card>
-  <form (submit)="onAddPost(postForm)" #postForm="ngForm">
-    <h2 class="new-post-title mat-body-1">Create Post</h2>
+  <form (submit)="onSavePost(postForm)" #postForm="ngForm">
+    <h2 class="new-post-title mat-body-1">Management of Post</h2>
     <mat-form-field>
       <input type="text"
-              ngModel
+              [ngModel]="post.title"
               name="title"
               matInput
-              placeholder="Title"
+              placeholder="Post Title"
               required
               minlength="3"
               maxlength="30"
@@ -17,9 +17,9 @@
     </mat-form-field>
     <mat-form-field>
       <textarea matInput rows="6"
-                ngModel
+                [ngModel]="post.content"
                 name="content"
-                placeholder="Content"
+                placeholder="Post Content"
                 required
                 minlength="3"
                 #content="ngModel"></textarea>

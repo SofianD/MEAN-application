@@ -1,5 +1,4 @@
 <div *ngIf="posts.length">
-  <hr>
   <h2>Post List Component</h2>
   <mat-accordion multi="true">
     <mat-expansion-panel *ngFor="let post of posts">
@@ -10,7 +9,7 @@
       </mat-expansion-panel-header>
       <p>{{ post.content }}</p>
       <mat-action-row>
-        <button mat-button color="primary">Edit</button>
+        <a mat-button [routerLink]="['/edit', post.id]" color="primary">Edit</a>
         <button mat-button color="warn" (click)="onDelete(post.id)">Delete</button>
       </mat-action-row>
     </mat-expansion-panel>

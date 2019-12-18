@@ -18,6 +18,7 @@ import { HeaderComponent } from './header/header.component';
 import { PostCreateComponent } from './posts/post-create/post-create.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostService } from './posts/post.service';
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { PostService } from './posts/post.service';
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
     MatInputModule,

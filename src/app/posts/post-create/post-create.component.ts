@@ -1,27 +1,63 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
+
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { StringifyOptions } from 'querystring';
+
 import { PostService } from '../post.service';
-
-
+import { PostModel } from '../post-model';
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css']
 })
 
-export class PostCreateComponent {
+export class PostCreateComponent implements OnInit {
 
   enteredTitle: string;
   enteredContent: string;
+  post: PostModel;
+  private mode = 'create';
+  private postId: string;
 
-  onAddPost(form: NgForm) {
+
+
+  constructor(public postService: PostService, public route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('postId')) {
+        this.mode = 'edit';
+        this.postId = paramMap.get('postId');
+        this.post = this.postService.getPost(this.postId);
+      }
+    });
+  }
+
+  onSavePost(form: NgForm) {
+
     if (form.invalid) {
       return console.log('Formulaire invalide');
     }
-    this.postService.addPost(form.value.title, form.value.content);
+
+    if (this.mode === 'create') {
+      console.log('onSavePost Create');
+      this.postService.addPost(form.value.title, form.value.content);
+    }
+
+    if (this.mode === 'edit') {
+      console.log('onSavePost Edit: ');
+      console.log('this.postId: ', this.postId);
+      console.log('this.mode: ', this.mode);
+      console.log('form.value.title', form.value.title);
+      console.log('form.value.content', form.value.content);
+
+      this.postService.updatePost(this.postId, form.value.title, form.value.content);
+    }
+
     form.resetForm();
   }
 
-  constructor(public postService: PostService) {}
+
 }

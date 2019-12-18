@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { PostModel } from './post-model';
 import { TouchSequence } from 'selenium-webdriver';
+import { PostCreateComponent } from './post-create/post-create.component';
 
 @Injectable({
   providedIn: 'root'
@@ -58,10 +59,21 @@ export class PostService {
       });
   }
 
+  getPost(id: string) {
+    return {...this.posts.find(p => p.id === id)};
+  }
+
+  updatePost(id: string, title: string, content: string) {
+    console.log('PostService UpdatePost');
+    const post: PostModel = { id, title, content };
+    console.log(post);
+    this.http.put('http://localhost:3000/api/posts/' + id, post);
+  }
+
   deletePost(postId: string) {
     this.http.delete('http://localhost:3000/api/posts/' + postId)
       .subscribe(() => {
-        console.log('Deleted');
+        // console.log('Deleted');
         const postsUpdated = this.posts.filter(post => post.id !== postId);
         this.posts = postsUpdated;
         this.postsUpdated.next([...this.posts]);
