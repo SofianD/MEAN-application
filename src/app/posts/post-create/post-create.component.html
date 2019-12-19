@@ -4,7 +4,7 @@
     <h2 class="new-post-title mat-body-1">Management of Post</h2>
     <mat-form-field>
       <input type="text"
-              [ngModel]="post.title"
+              [ngModel]="post?.title"
               name="title"
               matInput
               placeholder="Post Title"
@@ -17,7 +17,7 @@
     </mat-form-field>
     <mat-form-field>
       <textarea matInput rows="6"
-                [ngModel]="post.content"
+                [ngModel]="post?.content"
                 name="content"
                 placeholder="Post Content"
                 required
