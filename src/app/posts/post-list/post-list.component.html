@@ -1,18 +1,19 @@
-<div *ngIf="posts.length">
-  <h2>Post List Component</h2>
-  <mat-accordion multi="true">
-    <mat-expansion-panel *ngFor="let post of posts">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ post.title }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <p>{{ post.content }}</p>
-      <mat-action-row>
-        <a mat-button [routerLink]="['/edit', post.id]" color="primary">Edit</a>
-        <button mat-button color="warn" (click)="onDelete(post.id)">Delete</button>
-      </mat-action-row>
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>
-<p class="info-text mat-body-1" *ngIf="!posts.length">No post added yet.</p>
+
+<h2>Post List Component</h2>
+<mat-spinner *ngIf="isLoading"></mat-spinner>
+<mat-accordion multi="true" *ngIf="posts.length && !isLoading">
+  <mat-expansion-panel *ngFor="let post of posts">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ post.title }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <p>{{ post.content }}</p>
+    <mat-action-row>
+      <a mat-button [routerLink]="['/edit', post.id]" color="primary">Edit</a>
+      <button mat-button color="warn" (click)="onDelete(post.id)">Delete</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<p *ngIf="!isLoading && !posts.length" class="info-text mat-body-1">No post added yet.</p>
