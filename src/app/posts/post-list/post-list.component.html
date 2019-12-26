@@ -1,19 +1,36 @@
 
 <h2>Post List Component</h2>
 <mat-spinner *ngIf="isLoading"></mat-spinner>
+
 <mat-accordion multi="true" *ngIf="posts.length && !isLoading">
   <mat-expansion-panel *ngFor="let post of posts">
+
     <mat-expansion-panel-header>
       <mat-panel-title>
         {{ post.title }}
       </mat-panel-title>
     </mat-expansion-panel-header>
+
+    <div class="image-post">
+      <img [src]="post.imagePath" [alt]="post.title">
+    </div>
+
     <p>{{ post.content }}</p>
+
     <mat-action-row>
       <a mat-button [routerLink]="['/edit', post.id]" color="primary">Edit</a>
       <button mat-button color="warn" (click)="onDelete(post.id)">Delete</button>
     </mat-action-row>
+
   </mat-expansion-panel>
 </mat-accordion>
+
+<mat-paginator
+  *ngIf="posts.length > 0"
+  [length]="totalPosts"
+  [pageSize]="postsPerPage"
+  [pageSizeOptions]="pageSizeOptions"
+  (page)="onChangedPage($event)">
+</mat-paginator>
 
 <p *ngIf="!isLoading && !posts.length" class="info-text mat-body-1">No post added yet.</p>
