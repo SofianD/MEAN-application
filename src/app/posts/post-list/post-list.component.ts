@@ -32,8 +32,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.postsSub = this.postService.getPostsUpdateListener()
       .subscribe((posts: PostModel[]) => {
         this.posts = posts;
+        this.isLoading = false;
       });
-    this.isLoading = false;
   }
 
   onChangedPage(pageData: PageEvent) {
