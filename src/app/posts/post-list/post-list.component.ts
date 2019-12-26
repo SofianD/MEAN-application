@@ -4,6 +4,7 @@ import { PageEvent } from '@angular/material';
 
 import { PostModel } from '../post-model';
 import { PostService } from '../post.service';
+import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/typings/overlay-directives';
 
 
 @Component({
@@ -18,9 +19,9 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   // paginator variables
   currentPage = 1;
-  totalPosts = 10;
+  totalPosts: number;
   postsPerPage = 3;
-  pageSizeOptions = [ 1, 2, 3, 4, 5 ];
+  pageSizeOptions = [ 1, 2, 3, 5, 10 ];
 
   isLoading = false;
 
@@ -29,11 +30,14 @@ export class PostListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.postService.getPosts(this.postsPerPage, this.currentPage);
-    this.postsSub = this.postService.getPostsUpdateListener()
-      .subscribe((posts: PostModel[]) => {
-        this.posts = posts;
-        this.isLoading = false;
-      });
+    this.postsSub = this.postService
+                      .getPostsUpdateListener()
+                      .subscribe((postData: {posts: PostModel[], postCount: number}) => {
+                        this.isLoading = false;
+                        this.totalPosts = postData.postCount;
+                        this.posts = postData.posts;
+                      });
+
   }
 
   onChangedPage(pageData: PageEvent) {
@@ -43,7 +47,12 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(id: string) {
-    this.postService.deletePost(id);
+    this.isLoading = true;
+    this.postService
+      .deletePost(id)
+      .subscribe(() => {
+        this.postService.getPosts(this.postsPerPage, this.currentPage);
+      });
   }
 
   ngOnDestroy() {
