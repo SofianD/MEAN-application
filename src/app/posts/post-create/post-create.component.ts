@@ -56,31 +56,32 @@ export class PostCreateComponent implements OnInit {
           asyncValidators: [mimeType]
       })
     });
-
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has('postId')) {
-        this.mode = 'edit';
-        this.postId = paramMap.get('postId');
-        this.isLoading = true;
-        this.postService.getPost(this.postId).subscribe((postData) => {
-          this.post = {
-            id: postData._id,
-            title: postData.title,
-            content: postData.content,
-            imagePath: postData.imagePath
-          };
-          this.form.setValue({
-            title: this.post.title,
-            content: this.post.content,
-            image: this.post.imagePath
-          });
-          this.imagePreview = this.form.get('image').value;
-        });
-
-        this.isLoading = false;
-      }
-    });
+    this.Initialize();
   }
+
+async Initialize(): Promise<void> {
+  this.isLoading = true;
+
+  if (this.route.snapshot.params.postId) {
+    this.mode = 'edit';
+    this.postId = this.route.snapshot.params.postId;
+  }
+
+  try {
+    this.post = await this.postService.getPost(this.postId)
+    this.form.setValue({
+      title: this.post.title,
+      content: this.post.content,
+      image: this.post.imagePath
+    });
+    this.imagePreview = this.form.get('image').value;
+
+  } catch (e) {
+    console.error(e);
+  }
+
+  this.isLoading = false;
+}
 
 
   onImagePicked(event: Event) {
@@ -94,7 +95,17 @@ export class PostCreateComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  onSavePost() {
+    /**
+   * Function called to create or edit a Post.
+   * Set loading on true,
+   * Check the form,
+   * Save the post and redirect,
+   * Reset the form and set loading on false (in case of error),
+   *
+   * @returns {Promise<void>}
+   * @memberof AlbumCreateComponent
+   */
+  async savePost(): Promise<void> {
 
     if (this.form.invalid) {
       return console.log('Formulaire invalide');
@@ -102,19 +113,25 @@ export class PostCreateComponent implements OnInit {
 
     this.isLoading = true;
 
+    this.post = this.form.value;
+
     if (this.mode === 'create') {
       console.log('onSavePost Create');
-      this.postService.addPost(this.form.value.title, this.form.value.content, this.form.value.image);
+      try {
+        this.postService.addPost(this.post);
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     if (this.mode === 'edit') {
-      this.postService.updatePost(
-        this.postId,
-        this.form.value.title,
-        this.form.value.content,
-        this.form.value.image
-      );
+      try {
+        this.postService.updatePost(this.post);
+      } catch (e) {
+        console.error(e);
+      }
     }
+
     this.form.reset();
   }
 }
