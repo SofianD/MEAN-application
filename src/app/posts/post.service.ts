@@ -47,9 +47,9 @@ export class PostService {
    * Request to create a new album.
    *
    * @param {string} title
-   * @param {*} images
+   * @param {*} image
    * @returns {Promise<any>}
-   * @memberof AlbumsService
+   * @memberof PostService
    */
   addPost(post: PostModel): Promise<any> {
     return this.http.post<{message: string, post: PostModel}>('http://localhost:3000/api/posts', post).toPromise();
@@ -58,9 +58,9 @@ export class PostService {
     /**
    * Request to update the album selectionned.
    *
-   * @param {Album} album
+   * @param {Post} album
    * @returns {Promise<any>}
-   * @memberof AlbumsService
+   * @memberof PostService
    */
   updatePost(post: PostModel): Promise<any> {
     return this.http.put('http://localhost:3000/api/posts/' + post.id, post).toPromise();
@@ -70,9 +70,9 @@ export class PostService {
     /**
    * Request to delete the album selectionned.
    *
-   * @param {string} albumId
+   * @param {string} postId
    * @returns {Promise<any>}
-   * @memberof AlbumsService
+   * @memberof PostService
    */
   deletePost(postId: string): Promise<any> {
     return this.http.delete('http://localhost:3000/api/posts/' + postId).toPromise();
