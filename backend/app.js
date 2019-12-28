@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const secureUser = require('./../../UserMongoDb');
 const postsRoutes = require('./routes/posts');
+const userRoutes = require('./routes/user');
 
 const app = express();
 // DATABASE CONNECTION
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/posts", postsRoutes);
+app.use("/api/user", userRoutes);
 
 
 
