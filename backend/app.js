@@ -1,50 +1,44 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const secureUser = require('./../../UserMongoDb');
+const postsRoutes = require('./routes/posts');
+const userRoutes = require('./routes/user');
 
 const app = express();
+// DATABASE CONNECTION
+mongoose.connect("mongodb+srv://"+ secureUser +"@cluster0-7ef28.mongodb.net/MeanStack?retryWrites=true&w=majority")
+  .then(() => {
+    console.log('Connected to database.');
+  })
+  .catch(() => {
+    console.log('Connection failed');
+  });
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use("/images", express.static(path.join("backend/images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PACTH, DELETE, OPTIONS"
+    "GET, POST, PACTH, PUT, DELETE, OPTIONS"
   );
   next();
-})
-
-app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
-  console.log("Req.body", post);
-
-  res.status(201).json({
-    message: 'Post added successfully'
-  });
 });
 
-app.get("/api/posts", (req, res, next) => {
-  const posts = [
-    {
-      id: "1111",
-      title: "Wsh la street.",
-      content: "WESH LA STREEEEEEEEEEEEEEEET"
-    },
-    {
-      id: "2222",
-      title: "Sisi la street.",
-      content: "SISIII LA STREEEEEEEEEEEEEEEET"
-    }
-  ]
-  res.status(200).json({
-    message: 'Posts fetched succesfully',
-    posts: posts
-  })
-});
+app.use("/api/posts", postsRoutes);
+app.use("/api/user", userRoutes);
+
+
 
 module.exports = app;

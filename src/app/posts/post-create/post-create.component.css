@@ -7,3 +7,15 @@ textarea {
   font-size: larger;
   text-align: center;
 }
+
+mat-spinner {
+  margin: auto;
+}
+
+input[type="file"] {
+  visibility: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+}
