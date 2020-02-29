@@ -1,23 +1,30 @@
 <mat-toolbar color="primary">
-  <span>Cours MEAN Stack</span>
+
+  <span>
+    <a mat-button routerLink="">Mes listes</a>
+  </span>
+
   <span class="spacer"></span>
+
   <span>
     <ul>
-      <li>
-        <a mat-button routerLink="">Mes listes</a>
-      </li>
-
-      <li>
+      <li *ngIf="userIsAuthenticated">
         <a mat-button routerLink="create" routerLinkActive="mat-accent">Nouveau poste</a>
       </li>
 
-      <li>
+      <li *ngIf="!userIsAuthenticated">
         <a mat-button routerLink="login" routerLinkActive="mat-accent">Log In</a>
       </li>
 
-      <li>
+      <li *ngIf="!userIsAuthenticated">
         <a mat-button routerLink="signup" routerLinkActive="mat-accent">Sign Up</a>
       </li>
+
+      <li *ngIf="userIsAuthenticated">
+        <button mat-button color="warn" (click)="onLogOut()">Log Out</button>
+      </li>
     </ul>
+
   </span>
+
 </mat-toolbar>

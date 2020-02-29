@@ -27,14 +27,14 @@ export class PostService {
       .pipe(
         map((postData) => {
           return {
-
             posts:
               postData.posts.map(post => {
                 return {
                   title: post.title,
                   content: post.content,
                   id: post._id,
-                  imagePath: post.imagePath
+                  imagePath: post.imagePath,
+                  creatorId: post.creatorId
                 };
               })
             ,
@@ -50,6 +50,8 @@ export class PostService {
             posts: [...this.posts],
             postCount: transformedPostData.maxPosts
           });
+      }, error => {
+        console.log(error);
       });
   }
 
@@ -58,7 +60,13 @@ export class PostService {
   }
 
   getPost(id: string) {
-    return this.http.get<{_id: string, title: string, content: string, imagePath: string}>('http://localhost:3000/api/posts/' + id);
+    return this.http.get<{
+      _id: string,
+      title: string,
+      content: string,
+      imagePath: string,
+      creatorId: string
+    }>('http://localhost:3000/api/posts/' + id);
   }
 
   addPost(title: string, content: string, image: File) {
@@ -72,7 +80,10 @@ export class PostService {
         postData
       )
       .subscribe((responseData) => {
+        console.log(responseData);
         this.router.navigate(['/']);
+      }, error => {
+        console.log(error);
       });
   }
 
@@ -91,7 +102,8 @@ export class PostService {
         id,
         title,
         content,
-        imagePath: image
+        imagePath: image,
+        creatorId: null
       };
     }
     // console.log(post);
@@ -99,6 +111,8 @@ export class PostService {
       .put('http://localhost:3000/api/posts/' + id, postData)
       .subscribe((response) => {
         this.router.navigate(['/']);
+      }, error => {
+        console.log(error);
       });
   }
 

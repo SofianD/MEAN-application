@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 
+const checkAuth = require('../middlewares/check-auth');
 const router = express.Router();
 const Post = require('../models/post');
 
@@ -26,26 +27,35 @@ const storage = multer.diskStorage({
 });
 
 // ADD NEW POST
-router.post("", multer({storage: storage}).single('image'),(req, res, next) => {
+router.post("", checkAuth, multer({storage: storage}).single('image'), (req, res, next) => {
   const url = req.protocol + '://' + req.get('host');
+
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
-    imagePath: url + '/images/' + req.file.filename
+    imagePath: url + '/images/' + req.file.filename,
+    creatorId: req.userData.userId
   });
-  //console.log("Req.body: ", post);
 
-  post.save().then(createdPost => {
-    res.status(201).json({
-      message: 'Post added successfully',
-      post: {
-        id: createdPost._id,
-        title: createdPost.title,
-        content: createdPost.content,
-        imagePath: createdPost.imagePath
-      }
+  post
+    .save()
+    .then(createdPost => {
+      res.status(201).json({
+        message: 'Post added successfully',
+        post: {
+          id: createdPost._id,
+          title: createdPost.title,
+          content: createdPost.content,
+          imagePath: createdPost.imagePath,
+          creatorId: req.userData.userId
+        }
+      });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Creating post failed.'
+      })
     });
-  });
 });
 
 // RETRIEVE POSTS
@@ -72,22 +82,34 @@ router.get("", (req, res, next) => {
         posts: fetchedPosts,
         maximumPosts: count
       });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Fetching posts failed.'
+      })
     });
 });
 
 // RETRIEVE POST BY ID
 router.get("/:id", (req, res, next) => {
-  Post.findById(req.params.id).then(post => {
-    if (post) {
-      res.status(200).json(post);
-    }
-    else {
-      res.status(404).json({ message: 'Post not found.' });
-    }
-  })
+  Post
+    .findById(req.params.id)
+    .then(post => {
+      if (post) {
+        res.status(200).json(post);
+      }
+      else {
+        res.status(404).json({ message: 'Post not found.' });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Creating post failed.'
+      })
+    });
 });
 
-router.put("/:id", multer({storage: storage}).single('image'), (req, res, next) => {
+router.put("/:id", checkAuth, multer({storage: storage}).single('image'), (req, res, next) => {
   let imagePath = req.body.imagePath;
   if (req.file) {
     const url = req.protocol + '://' + req.get('host');
@@ -97,19 +119,41 @@ router.put("/:id", multer({storage: storage}).single('image'), (req, res, next) 
     _id: req.params.id,
     title: req.body.title,
     content: req.body.content,
-    imagePath: imagePath
+    imagePath: imagePath,
+    creatorId: req.userData.userId
   });
-  Post.updateOne({_id: req.params.id}, post).then(result => {
-    console.log(result);
-    res.status(200).json({ message: 'Update successful' });
-  });
+  Post
+    .updateOne({_id: req.params.id, creatorId: req.userData.userId}, post)
+    .then(result => {
+      if (result.nModified > 0) {
+        res.status(200).json({ message: 'Update successful' });
+      } else {
+        res.status(401).json({ message: 'Not authorized' });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Updating post failed.'
+      })
+    });
+
 });
 
-router.delete("/:id", (req, res, next) => {
-  Post.deleteOne({_id: req.params.id}).then(result => {
-    console.log(result);
-    res.status(200).json({ message: "Post deleted." });
-  });
+router.delete("/:id", checkAuth, (req, res, next) => {
+  Post
+    .deleteOne({_id: req.params.id, creatorId: req.userData.userId})
+    .then(result => {
+      if (result.n > 0) {
+        res.status(200).json({ message: "Post deleted." });
+      } else {
+        res.status(401).json({ message: 'Not authorized' });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Deleting post failed.'
+      })
+    });
 });
 
 module.exports = router;
